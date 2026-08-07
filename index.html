@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BYO — Boxing Equipment. Be your own opponent.</title>
+<meta name="description" content="High-performance boxing gear built for fighters with discipline, passion, and purpose. Gloves, headgear, bags and wraps that hold up round after round.">
+<link rel="icon" href="brand_assets/BYO%20logo%201%20(1).png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        ink:    '#0D0D0D',
+        pit:    '#080808',
+        canvas: '#141312',
+        rope:   '#1F1D1C',
+        red:    '#E53935',
+        ember:  '#FF6A00',
+        bone:   '#F2EFEA',
+        ash:    '#8C8781',
+      },
+      fontFamily: {
+        display: ['"Bebas Neue"', 'Impact', 'sans-serif'],
+        body:    ['Raleway', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        'lift':  '0 1px 0 0 rgba(242,239,234,.06) inset, 0 18px 40px -24px rgba(229,57,53,.55), 0 2px 8px -2px rgba(0,0,0,.9)',
+        'punch': '0 0 0 1px rgba(229,57,53,.35), 0 24px 60px -28px rgba(255,106,0,.7), 0 8px 20px -12px rgba(0,0,0,.95)',
+        'glove': '0 34px 80px -40px rgba(229,57,53,.85), 0 4px 16px -6px rgba(0,0,0,.9)',
+      },
+    },
+  },
+};
+</script>
+
+<script>
+  // Only opt into scroll-reveal when the observer is actually available,
+  // so content is never left invisible.
+  if ('IntersectionObserver' in window) document.documentElement.classList.add('js');
+</script>
+
+<style>
+  :root{
+    --gutter: clamp(1.25rem, 5vw, 5rem);
+    --band:   clamp(4.5rem, 9vw, 8.5rem);
+    --ease:   cubic-bezier(.2,.9,.25,1.08);
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body { background:#0D0D0D; color:#F2EFEA; font-family:Raleway, system-ui, sans-serif; }
+
+  .wrap { max-width: 88rem; margin-inline:auto; padding-inline: var(--gutter); }
+  .band { padding-block: var(--band); }
+
+  /* ---- Atmosphere: layered radial light + grain, echoing a lit ring in a dark hall ---- */
+  .stage{ position:relative; isolation:isolate; }
+  .stage::before{
+    content:''; position:absolute; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(110% 70% at 50% -10%, rgba(255,106,0,.13) 0%, rgba(255,106,0,0) 52%),
+      radial-gradient(62% 46% at 84% 14%,   rgba(229,57,53,.17) 0%, rgba(229,57,53,0) 60%),
+      radial-gradient(80% 62% at 8% 96%,    rgba(229,57,53,.07) 0%, rgba(13,13,13,0) 58%);
+  }
+  .grain::after{
+    content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    opacity:.22; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Type system ---- */
+  .display{ font-family:'Bebas Neue', Impact, sans-serif; font-weight:400; letter-spacing:-0.005em; line-height:.84; }
+  .oblique{ transform: skewX(-8deg); transform-origin:left bottom; }  /* echoes the wordmark's cut */
+  .eyebrow{
+    font-family:Raleway, sans-serif; font-weight:800; font-size:.6875rem;
+    letter-spacing:.34em; text-transform:uppercase; color:#FF6A00;
+  }
+  .prose-body{ line-height:1.7; color:#B9B3AD; font-weight:400; }
+
+  /* ---- Signature: the bolt slash cutting the hero headline ---- */
+  .slash-line{ position:relative; display:flex; align-items:center; gap:clamp(.5rem,1.4vw,1.4rem); }
+  .slash{
+    flex:none; width:clamp(30px, 4.6vw, 74px); height:clamp(64px, 11vw, 168px);
+    background:linear-gradient(180deg,#FF6A00 0%,#FF6A00 38%,#E53935 100%);
+    clip-path: polygon(58% 0, 100% 0, 44% 44%, 86% 44%, 18% 100%, 42% 54%, 2% 54%);
+    filter: drop-shadow(0 0 30px rgba(255,106,0,.55));
+    transform: translateY(-130%) rotate(-6deg) scale(.9); opacity:0;
+    animation: strike .72s var(--ease) .6s forwards;
+  }
+  @keyframes strike{
+    0%   { transform:translateY(-130%) rotate(-6deg) scale(.9); opacity:0; }
+    55%  { opacity:1; }
+    100% { transform:translateY(0) rotate(-6deg) scale(1); opacity:1; }
+  }
+  .rise{ opacity:0; transform:translateY(22px); animation: rise .8s var(--ease) forwards; }
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+
+  /* ---- Speed-bag rhythm marquee ---- */
+  .bag-track{ display:flex; width:max-content; animation: bag 34s linear infinite; }
+  @keyframes bag{ to{ transform:translateX(-50%); } }
+  .marquee:hover .bag-track{ animation-play-state:paused; }
+
+  /* ---- Scroll reveal (only hides when JS can bring it back) ---- */
+  .js .reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+  .js .reveal.seen{ opacity:1; transform:none; }
+
+  /* ---- Product image treatment ---- */
+  .shot{ position:relative; overflow:hidden; background:#141312; }
+  .shot img{ transition: transform .55s var(--ease); }
+  .shot::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(8,8,8,.78) 0%, rgba(8,8,8,.08) 52%, rgba(255,106,0,.16) 100%);
+    mix-blend-mode:multiply; pointer-events:none;
+  }
+  .card:hover .shot img, .card:focus-within .shot img{ transform:scale(1.055); }
+
+  /* ---- Interaction states ---- */
+  a, button { -webkit-tap-highlight-color: transparent; }
+  :where(a, button, input):focus-visible{
+    outline:2px solid #FF6A00; outline-offset:3px; border-radius:2px;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
+    font-family:'Bebas Neue', sans-serif; font-size:1.125rem; letter-spacing:.09em;
+    padding:.95rem 2.1rem; position:relative;
+    transition: transform .28s var(--ease), box-shadow .28s var(--ease), background-color .28s var(--ease), color .28s var(--ease), border-color .28s var(--ease);
+  }
+  .btn-primary{ background:#E53935; color:#F2EFEA; box-shadow:0 16px 34px -20px rgba(229,57,53,.95); }
+  .btn-primary:hover{ background:#FF6A00; transform:translateY(-2px); box-shadow:0 22px 44px -18px rgba(255,106,0,.9); }
+  .btn-primary:active{ transform:translateY(1px) scale(.985); }
+  .btn-ghost{ border:1px solid rgba(242,239,234,.24); color:#F2EFEA; }
+  .btn-ghost:hover{ border-color:#FF6A00; color:#FF6A00; transform:translateY(-2px); }
+  .btn-ghost:active{ transform:translateY(1px) scale(.985); }
+
+  .navlink{ position:relative; transition:color .25s var(--ease); }
+  .navlink::after{
+    content:''; position:absolute; left:0; bottom:-6px; height:2px; width:100%;
+    background:#FF6A00; transform:scaleX(0); transform-origin:left;
+    transition:transform .3s var(--ease);
+  }
+  .navlink:hover{ color:#F2EFEA; }
+  .navlink:hover::after{ transform:scaleX(1); }
+
+  .card{ transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease); }
+  .card:hover{ transform:translateY(-6px); border-color:rgba(229,57,53,.5); box-shadow:0 30px 60px -34px rgba(229,57,53,.7); }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation:none !important; transition-duration:.01ms !important; }
+    .reveal{ opacity:1; transform:none; }
+    .slash{ opacity:1; transform:rotate(-4deg); }
+  }
+</style>
+</head>
+
+<body class="font-body antialiased selection:bg-red selection:text-bone">
+
+<a href="#gear" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-red focus:px-4 focus:py-2 focus:text-bone">Skip to gear</a>
+
+<!-- ══ NAV ══ -->
+<header class="fixed inset-x-0 top-0 z-40 border-b border-bone/10 bg-ink/80 backdrop-blur-xl">
+  <nav class="wrap flex h-[74px] items-center justify-between gap-6" aria-label="Main">
+    <a href="#" class="flex items-center transition-transform duration-300 hover:scale-[1.04]">
+      <img src="brand_assets/BYO%20logo%201%20(1).png" alt="BYO Boxing Equipment" class="h-[58px] w-[58px] object-contain mix-blend-screen">
+    </a>
+
+    <ul class="hidden items-center gap-9 text-[.8rem] font-semibold uppercase tracking-[.16em] text-ash lg:flex">
+      <li><a class="navlink" href="#gear">Gear</a></li>
+      <li><a class="navlink" href="#built">Built for</a></li>
+      <li><a class="navlink" href="#kits">Kits</a></li>
+      <li><a class="navlink" href="#corner">The corner</a></li>
+    </ul>
+
+    <div class="flex items-center gap-3">
+      <a href="#gear" class="btn btn-ghost !px-5 !py-2.5 !text-base">Cart · 0</a>
+      <a href="#gear" class="btn btn-primary !px-6 !py-2.5 !text-base hidden sm:inline-flex">Shop gear</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══ HERO ══ -->
+<section class="stage grain relative overflow-hidden pt-[74px]">
+  <div class="wrap grid items-end gap-14 pb-16 pt-20 lg:grid-cols-[1.05fr_.95fr] lg:pb-24 lg:pt-28">
+
+    <div>
+      <p class="eyebrow rise" style="animation-delay:.05s">Boxing equipment · Est. in the gym</p>
+
+      <h1 class="display oblique mt-7 text-bone text-[clamp(3rem,10vw,8.5rem)]">
+        <span class="slash-line rise" style="animation-delay:.15s">Be your own</span>
+        <span class="slash-line rise" style="animation-delay:.28s">
+          <span>opponent</span>
+          <span class="slash" aria-hidden="true"></span>
+        </span>
+      </h1>
+
+      <p class="prose-body rise mt-8 max-w-[46ch] text-[1.0625rem]" style="animation-delay:.42s">
+        Gloves, headgear and bags built for fighters with discipline, passion, and purpose.
+        Train harder, fight smarter, and outlast the version of you that showed up yesterday.
+      </p>
+
+      <div class="rise mt-10 flex flex-wrap items-center gap-4" style="animation-delay:.52s">
+        <a href="#gear" class="btn btn-primary">Shop the gear</a>
+        <a href="#kits" class="btn btn-ghost">Build a kit</a>
+      </div>
+
+      <dl class="rise mt-14 grid max-w-lg grid-cols-3 gap-px overflow-hidden rounded-sm border border-bone/10 bg-bone/10" style="animation-delay:.62s">
+        <div class="flex flex-col bg-ink px-5 py-5">
+          <dt class="text-[.65rem] font-bold uppercase tracking-[.2em] text-ash">Rounds tested</dt>
+          <dd class="display mt-auto pt-3 text-4xl text-ember">12,000</dd>
+        </div>
+        <div class="flex flex-col bg-ink px-5 py-5">
+          <dt class="text-[.65rem] font-bold uppercase tracking-[.2em] text-ash">Warranty</dt>
+          <dd class="display mt-auto pt-3 text-4xl text-ember">2 yr</dd>
+        </div>
+        <div class="flex flex-col bg-ink px-5 py-5">
+          <dt class="text-[.65rem] font-bold uppercase tracking-[.2em] text-ash">Free ship over</dt>
+          <dd class="display mt-auto pt-3 text-4xl text-ember">$120</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Hero product plate -->
+    <div class="rise relative" style="animation-delay:.34s">
+      <div class="absolute -inset-6 -z-10 bg-[radial-gradient(60%_60%_at_50%_40%,rgba(229,57,53,.35),transparent_70%)]"></div>
+      <figure class="shot relative aspect-[4/5] w-full border border-bone/10 shadow-glove">
+        <img src="https://placehold.co/900x1125/262322/F2EFEA?text=BYO+APEX+GLOVE" alt="BYO Apex 16oz training glove" class="h-full w-full object-cover">
+        <figcaption class="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 p-6">
+          <div>
+            <p class="eyebrow !text-bone/70">New drop</p>
+            <p class="display oblique mt-2 text-4xl text-bone">Apex 16oz</p>
+          </div>
+          <p class="display text-3xl text-ember">$189</p>
+        </figcaption>
+      </figure>
+    </div>
+
+  </div>
+
+  <!-- Speed-bag rhythm marquee -->
+  <div class="marquee relative overflow-hidden border-y border-bone/10 bg-pit py-4">
+    <div class="bag-track items-center gap-10 text-[.75rem] font-bold uppercase tracking-[.28em] text-ash">
+      <span class="flex shrink-0 items-center gap-10 pr-10">
+        <span>Hand-laced gloves</span><span class="text-red">/</span>
+        <span>Full-grain leather</span><span class="text-red">/</span>
+        <span>Free returns for 60 days</span><span class="text-red">/</span>
+        <span>Sparring-approved padding</span><span class="text-red">/</span>
+        <span>Ships in 48 hours</span><span class="text-red">/</span>
+      </span>
+      <span class="flex shrink-0 items-center gap-10 pr-10" aria-hidden="true">
+        <span>Hand-laced gloves</span><span class="text-red">/</span>
+        <span>Full-grain leather</span><span class="text-red">/</span>
+        <span>Free returns for 60 days</span><span class="text-red">/</span>
+        <span>Sparring-approved padding</span><span class="text-red">/</span>
+        <span>Ships in 48 hours</span><span class="text-red">/</span>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GEAR ══ -->
+<section id="gear" class="band stage relative">
+  <div class="wrap">
+    <div class="reveal flex flex-wrap items-end justify-between gap-6 border-b border-bone/10 pb-8">
+      <div>
+        <p class="eyebrow">The rack</p>
+        <h2 class="display oblique mt-4 text-[clamp(2.6rem,6vw,4.75rem)] text-bone">Gear that stays<br>in the fight</h2>
+      </div>
+      <p class="prose-body max-w-[38ch] text-[.95rem]">
+        Four pieces cover almost every session. Each one is stitched, stress-tested and sold on how it holds up after month six — not month one.
+      </p>
+    </div>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <!-- Card 1 -->
+      <li class="card reveal group flex flex-col border border-bone/10 bg-canvas shadow-lift">
+        <div class="shot aspect-[4/5]">
+          <img src="https://placehold.co/700x875/262322/F2EFEA?text=GLOVES" alt="BYO Apex training gloves" class="h-full w-full object-cover">
+          <span class="absolute left-4 top-4 z-10 bg-red px-2.5 py-1 text-[.6rem] font-extrabold uppercase tracking-[.2em] text-bone">Best seller</span>
+        </div>
+        <div class="flex flex-1 flex-col p-6">
+          <p class="eyebrow !text-ash">Gloves</p>
+          <h3 class="display oblique mt-3 text-3xl text-bone">Apex Trainer</h3>
+          <p class="prose-body mt-3 flex-1 text-sm">Layered latex foam, locked wrist strap. 12 / 14 / 16 oz.</p>
+          <div class="mt-6 flex items-center justify-between border-t border-bone/10 pt-5">
+            <p class="display text-3xl text-ember">$189</p>
+            <button type="button" class="btn btn-ghost !px-4 !py-2 !text-sm">Add to cart</button>
+          </div>
+        </div>
+      </li>
+      <!-- Card 2 -->
+      <li class="card reveal group flex flex-col border border-bone/10 bg-canvas shadow-lift" style="transition-delay:.06s">
+        <div class="shot aspect-[4/5]">
+          <img src="https://placehold.co/700x875/262322/F2EFEA?text=HEADGEAR" alt="BYO Guardian sparring headgear" class="h-full w-full object-cover">
+        </div>
+        <div class="flex flex-1 flex-col p-6">
+          <p class="eyebrow !text-ash">Headgear</p>
+          <h3 class="display oblique mt-3 text-3xl text-bone">Guardian</h3>
+          <p class="prose-body mt-3 flex-1 text-sm">Open-face cheek protection with an unblocked sightline.</p>
+          <div class="mt-6 flex items-center justify-between border-t border-bone/10 pt-5">
+            <p class="display text-3xl text-ember">$134</p>
+            <button type="button" class="btn btn-ghost !px-4 !py-2 !text-sm">Add to cart</button>
+          </div>
+        </div>
+      </li>
+      <!-- Card 3 -->
+      <li class="card reveal group flex flex-col border border-bone/10 bg-canvas shadow-lift" style="transition-delay:.12s">
+        <div class="shot aspect-[4/5]">
+          <img src="https://placehold.co/700x875/262322/F2EFEA?text=HEAVY+BAG" alt="BYO Anvil 100lb heavy bag" class="h-full w-full object-cover">
+        </div>
+        <div class="flex flex-1 flex-col p-6">
+          <p class="eyebrow !text-ash">Heavy bag</p>
+          <h3 class="display oblique mt-3 text-3xl text-bone">Anvil 100</h3>
+          <p class="prose-body mt-3 flex-1 text-sm">Shredded-fill core that won't settle into a brick at the base.</p>
+          <div class="mt-6 flex items-center justify-between border-t border-bone/10 pt-5">
+            <p class="display text-3xl text-ember">$310</p>
+            <button type="button" class="btn btn-ghost !px-4 !py-2 !text-sm">Add to cart</button>
+          </div>
+        </div>
+      </li>
+      <!-- Card 4 -->
+      <li class="card reveal group flex flex-col border border-bone/10 bg-canvas shadow-lift" style="transition-delay:.18s">
+        <div class="shot aspect-[4/5]">
+          <img src="https://placehold.co/700x875/262322/F2EFEA?text=SPEED+BAG" alt="BYO Tempo speed bag" class="h-full w-full object-cover">
+          <span class="absolute left-4 top-4 z-10 bg-ember px-2.5 py-1 text-[.6rem] font-extrabold uppercase tracking-[.2em] text-ink">Low stock</span>
+        </div>
+        <div class="flex flex-1 flex-col p-6">
+          <p class="eyebrow !text-ash">Speed bag</p>
+          <h3 class="display oblique mt-3 text-3xl text-bone">Tempo</h3>
+          <p class="prose-body mt-3 flex-1 text-sm">Balanced rebound so your rhythm stays yours, not the bag's.</p>
+          <div class="mt-6 flex items-center justify-between border-t border-bone/10 pt-5">
+            <p class="display text-3xl text-ember">$76</p>
+            <button type="button" class="btn btn-ghost !px-4 !py-2 !text-sm">Add to cart</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ BUILT FOR ══ -->
+<section id="built" class="stage grain relative border-y border-bone/10 bg-pit">
+  <div class="wrap band grid gap-14 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
+    <figure class="reveal shot relative aspect-[3/4] border border-bone/10 shadow-punch">
+      <img src="https://placehold.co/840x1120/262322/F2EFEA?text=IN+THE+GYM" alt="Fighter working the bag in a BYO-equipped gym" class="h-full w-full object-cover">
+    </figure>
+
+    <div>
+      <p class="eyebrow reveal">Why it holds</p>
+      <h2 class="display oblique reveal mt-4 text-[clamp(2.6rem,6vw,4.75rem)] text-bone">Made for the<br>ugly rounds</h2>
+      <p class="prose-body reveal mt-6 max-w-[52ch]">
+        Anyone can build gear that feels good on the shelf. We build for round nine, when your hands are heavy and your form is the only thing keeping you upright.
+      </p>
+
+      <dl class="mt-12 grid gap-px bg-bone/10 sm:grid-cols-2">
+        <div class="reveal bg-pit p-7">
+          <dt class="display text-2xl text-bone">Full-grain leather</dt>
+          <dd class="prose-body mt-3 text-sm">Breaks in around your hand instead of cracking away from it.</dd>
+        </div>
+        <div class="reveal bg-pit p-7" style="transition-delay:.06s">
+          <dt class="display text-2xl text-bone">Triple-stitched seams</dt>
+          <dd class="prose-body mt-3 text-sm">The first thing to fail on cheap gloves is the last thing to fail here.</dd>
+        </div>
+        <div class="reveal bg-pit p-7" style="transition-delay:.12s">
+          <dt class="display text-2xl text-bone">Moisture-locked lining</dt>
+          <dd class="prose-body mt-3 text-sm">Dries between sessions so the bag isn't a biohazard by Friday.</dd>
+        </div>
+        <div class="reveal bg-pit p-7" style="transition-delay:.18s">
+          <dt class="display text-2xl text-bone">Two-year warranty</dt>
+          <dd class="prose-body mt-3 text-sm">Split a seam inside two years and we replace it. No receipt hunt.</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ══ KITS — a real sequence, so it's numbered ══ -->
+<section id="kits" class="band stage relative">
+  <div class="wrap">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow">Start here</p>
+      <h2 class="display oblique mt-4 text-[clamp(2.6rem,6vw,4.75rem)] text-bone">Three rounds to<br>a full kit</h2>
+      <p class="prose-body mt-6">Buy in order. Each round assumes you already own the one before it, so nothing you buy gets replaced later.</p>
+    </div>
+
+    <ol class="mt-14 grid gap-6 lg:grid-cols-3">
+      <li class="card reveal border border-bone/10 bg-canvas p-8 shadow-lift">
+        <p class="display text-6xl text-red/45">01</p>
+        <h3 class="display oblique mt-4 text-3xl text-bone">First bell</h3>
+        <p class="prose-body mt-3 text-sm">Gloves, wraps, a rope. Everything you need to train alone.</p>
+        <p class="display mt-8 text-4xl text-ember">$229 <span class="text-xl text-ash line-through">$268</span></p>
+        <button type="button" class="btn btn-ghost mt-6 w-full">Add kit</button>
+      </li>
+      <li class="card reveal border border-red/40 bg-canvas p-8 shadow-punch" style="transition-delay:.08s">
+        <div class="flex items-start justify-between">
+          <p class="display text-6xl text-red">02</p>
+          <span class="bg-red px-2.5 py-1 text-[.6rem] font-extrabold uppercase tracking-[.2em] text-bone">Most picked</span>
+        </div>
+        <h3 class="display oblique mt-4 text-3xl text-bone">Sparring ready</h3>
+        <p class="prose-body mt-3 text-sm">Adds headgear, a mouthguard and 16oz sparring gloves.</p>
+        <p class="display mt-8 text-4xl text-ember">$412 <span class="text-xl text-ash line-through">$489</span></p>
+        <button type="button" class="btn btn-primary mt-6 w-full">Add kit</button>
+      </li>
+      <li class="card reveal border border-bone/10 bg-canvas p-8 shadow-lift" style="transition-delay:.16s">
+        <p class="display text-6xl text-red/45">03</p>
+        <h3 class="display oblique mt-4 text-3xl text-bone">Home gym</h3>
+        <p class="prose-body mt-3 text-sm">Adds the Anvil heavy bag, mount hardware and the Tempo speed bag.</p>
+        <p class="display mt-8 text-4xl text-ember">$698 <span class="text-xl text-ash line-through">$812</span></p>
+        <button type="button" class="btn btn-ghost mt-6 w-full">Add kit</button>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══ THE CORNER ══ -->
+<section id="corner" class="stage grain relative border-y border-bone/10 bg-pit">
+  <div class="wrap band">
+    <p class="eyebrow reveal">The corner</p>
+    <div class="mt-10 grid gap-10 lg:grid-cols-3">
+      <blockquote class="reveal border-l-2 border-red pl-7">
+        <p class="display text-[1.6rem] leading-[1.25] text-bone">"Two years on the same pair of Apex gloves. The stitching hasn't moved."</p>
+        <footer class="prose-body mt-5 text-xs uppercase tracking-[.2em]">Dania R. — amateur, 14–2</footer>
+      </blockquote>
+      <blockquote class="reveal border-l-2 border-ember pl-7" style="transition-delay:.08s">
+        <p class="display text-[1.6rem] leading-[1.25] text-bone">"I put the Anvil in a garage with forty members hitting it daily. It's fine."</p>
+        <footer class="prose-body mt-5 text-xs uppercase tracking-[.2em]">Marcus O. — coach, Southside BC</footer>
+      </blockquote>
+      <blockquote class="reveal border-l-2 border-red pl-7" style="transition-delay:.16s">
+        <p class="display text-[1.6rem] leading-[1.25] text-bone">"The Guardian is the first headgear I've owned that I can actually see out of."</p>
+        <footer class="prose-body mt-5 text-xs uppercase tracking-[.2em]">Kenji T. — sparring three nights a week</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="stage grain relative overflow-hidden">
+  <div class="wrap band text-center">
+    <img src="brand_assets/BYO%20logo%201%20(1).png" alt="" class="reveal mx-auto h-28 w-28 object-contain mix-blend-screen">
+    <h2 class="display oblique reveal mx-auto mt-8 max-w-[16ch] text-[clamp(2.8rem,8vw,6.5rem)] text-bone">Step in when you're ready</h2>
+    <p class="prose-body reveal mx-auto mt-6 max-w-[46ch]">Get new drops and training notes from our coaches. One email a week, no filler.</p>
+
+    <form class="reveal mx-auto mt-10 flex w-full max-w-md flex-col gap-3 sm:flex-row" onsubmit="event.preventDefault(); this.reset(); this.querySelector('[data-msg]').hidden = false;">
+      <label for="email" class="sr-only">Email address</label>
+      <input id="email" name="email" type="email" required placeholder="you@email.com"
+             class="min-w-0 flex-1 border border-bone/20 bg-canvas px-5 py-3.5 text-sm text-bone placeholder:text-ash focus:border-ember focus:outline-none">
+      <button type="submit" class="btn btn-primary">Sign up</button>
+      <p data-msg hidden class="sr-only">Signed up.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="border-t border-bone/10 bg-ink">
+  <div class="wrap grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <img src="brand_assets/BYO%20logo%201%20(1).png" alt="BYO Boxing Equipment" class="h-16 w-16 object-contain mix-blend-screen">
+
+      <p class="prose-body mt-5 max-w-[34ch] text-sm">Boxing equipment for fighters with discipline, passion, and purpose.</p>
+    </div>
+
+    <div>
+      <p class="eyebrow !text-ash">Shop</p>
+      <ul class="mt-5 space-y-3 text-sm text-ash">
+        <li><a class="navlink" href="#gear">Gloves</a></li>
+        <li><a class="navlink" href="#gear">Headgear</a></li>
+        <li><a class="navlink" href="#gear">Bags</a></li>
+        <li><a class="navlink" href="#kits">Kits</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow !text-ash">Support</p>
+      <ul class="mt-5 space-y-3 text-sm text-ash">
+        <li><a class="navlink" href="#">Sizing guide</a></li>
+        <li><a class="navlink" href="#">Shipping</a></li>
+        <li><a class="navlink" href="#">Returns</a></li>
+        <li><a class="navlink" href="#">Warranty</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow !text-ash">Follow</p>
+      <ul class="mt-5 space-y-3 text-sm text-ash">
+        <li><a class="navlink" href="#">Instagram</a></li>
+        <li><a class="navlink" href="#">YouTube</a></li>
+        <li><a class="navlink" href="#">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap flex flex-col gap-3 border-t border-bone/10 py-7 text-xs uppercase tracking-[.18em] text-ash sm:flex-row sm:items-center sm:justify-between">
+    <p>© 2026 BYO Boxing Equipment</p>
+    <p class="text-ember">Be your own opponent</p>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('seen');
+        io.unobserve(entry.target);
+      }
+    }
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+
+</body>
+</html>
+
