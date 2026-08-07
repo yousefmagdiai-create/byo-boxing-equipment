@@ -1,9 +1,10 @@
-// Serves ./new-site at http://localhost:3001 (the old page stays on :3000 via serve.mjs).
+// Serves the archived previous page from ./old-site at http://localhost:3001.
+// The current site lives at the repo root and is served on :3000 by serve.mjs.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 
-const ROOT = join(process.cwd(), 'new-site');
+const ROOT = join(process.cwd(), 'old-site');
 const PORT = 3001;
 
 const TYPES = {
